@@ -20,10 +20,10 @@ export function Hero() {
            <div className="absolute inset-0 rounded-full border-4 border-primary animate-ping"></div>
         </div>
         <h1 className="text-5xl md:text-7xl font-bold threed-text bg-clip-text text-transparent bg-gradient-to-b from-primary-foreground to-muted-foreground">
-          Deepak's Digital Domain
+          Deepak Kumar
         </h1>
         <p className="mt-4 max-w-2xl text-lg md:text-xl text-muted-foreground">
-          {profile.title}
+          Welcome to my personal profile. I'm a {profile.title}.
         </p>
         <div className="mt-8">
           <AiVoiceGreeting />

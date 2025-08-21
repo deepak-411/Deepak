@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: "Deepak's Digital Domain",
+  title: "Deepak Kumar Personal Profile",
   description: "The personal portfolio of Deepak Kumar, Software Engineer, Full-Stack Developer, and AI/ML Enthusiast.",
 };
 

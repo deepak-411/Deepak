@@ -43,7 +43,7 @@ const aiVoiceGreetingsFlow = ai.defineFlow(
           },
         },
       },
-      prompt: `Welcome to Deepak's Digital Domain, ${input.name}! I hope you enjoy your visit.`,
+      prompt: `Welcome to Deepak Kumar's personal profile, ${input.name}! I hope you enjoy your visit.`,
     });
     if (!media) {
       throw new Error('no media returned');
