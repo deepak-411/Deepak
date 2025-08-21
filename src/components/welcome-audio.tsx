@@ -32,5 +32,5 @@ export function WelcomeAudio({ audioUrl }: { audioUrl: string | null }) {
 
   if (!audioUrl) return null;
 
-  return <audio ref={audioRef} src={audioUrl} className="hidden" autoPlay />;
+  return <audio ref={audioRef} src={audioUrl} className="hidden" />;
 }
