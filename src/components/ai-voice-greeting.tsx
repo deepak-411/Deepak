@@ -1,115 +1,88 @@
 "use client";
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Play, Pause, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { welcomeGreeting } from '@/ai/flows/welcome-greeting';
+import { aiVoiceGreetings } from '@/ai/flows/ai-voice-greetings';
 
 export function AiVoiceGreeting() {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
 
-  useEffect(() => {
-    async function fetchGreeting() {
-      try {
-        // Fetch the pre-generated audio URL
-        const greeting = await welcomeGreeting();
-        setAudioUrl(greeting.media);
-      } catch (error) {
-        console.error("Failed to fetch greeting:", error);
-        toast({
-          title: "Audio Error",
-          description: "Could not load the welcome greeting.",
-          variant: "destructive",
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchGreeting();
-  }, [toast]);
-
-  // This effect runs when the audioRef is attached to the audio element.
-  useEffect(() => {
-    if (audioRef.current) {
-        // Attempt to autoplay
-        audioRef.current.play().then(() => {
-            setIsPlaying(true);
-        }).catch(error => {
-          // Autoplay was likely prevented by the browser. 
-          // This is expected behavior, so we don't need to show a user-facing error.
-          // The user can manually start the audio with the button.
-          console.warn("Autoplay was prevented by the browser.");
-          setIsPlaying(false);
-        });
-    }
-  }, [audioUrl]);
-
-  const handleTogglePlay = () => {
-    if (!audioRef.current) {
-      toast({
-          title: "Audio Not Ready",
-          description: "The welcome audio is still loading. Please wait a moment.",
-          variant: "destructive",
-      });
+  const handleTogglePlay = async () => {
+    // If audio is already loaded and playing, pause it.
+    if (isPlaying && audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
       return;
     }
+    
+    // If audio is loaded and paused, play it.
+    if (!isPlaying && audioRef.current && audioRef.current.src) {
+        audioRef.current.play().catch(handlePlayError);
+        setIsPlaying(true);
+        return;
+    }
 
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play().catch(err => {
-          console.error("Audio play failed:", err)
-          toast({
-              title: "Playback Error",
-              description: "Could not play the audio. Your browser may be blocking it.",
-              variant: "destructive"
-          })
-      });
+    // If audio is not loaded yet, generate and play it.
+    if (!audioRef.current?.src) {
+        setIsLoading(true);
+        try {
+            const { media } = await aiVoiceGreetings({ name: 'Guest' });
+            
+            // Create a new audio object if it doesn't exist
+            if (!audioRef.current) {
+              audioRef.current = new Audio();
+              audioRef.current.addEventListener('ended', () => setIsPlaying(false));
+              audioRef.current.addEventListener('pause', () => setIsPlaying(false));
+              audioRef.current.addEventListener('play', () => setIsPlaying(true));
+            }
+            
+            audioRef.current.src = media;
+            await audioRef.current.play();
+
+        } catch (error) {
+            console.error("Failed to generate or play audio:", error);
+            toast({
+                title: "Audio Error",
+                description: "Could not generate or play the welcome greeting. Please try again.",
+                variant: "destructive",
+            });
+        } finally {
+            setIsLoading(false);
+        }
     }
   };
 
-  if (isLoading) {
-    return (
-      <Button 
-          size="lg" 
-          variant="default" 
-          className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 transition-opacity duration-300 shadow-lg shadow-primary/30"
-          disabled={true}
-      >
-        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-        Loading AI Welcome...
-      </Button>
-    )
+  const handlePlayError = (err: any) => {
+    console.error("Audio play failed:", err);
+    toast({
+        title: "Playback Error",
+        description: "Could not play the audio. Your browser may be blocking it.",
+        variant: "destructive"
+    });
+    setIsPlaying(false);
   }
 
-  // Only render the audio element and button once the URL is available
   return (
-    <>
-      {audioUrl && (
-        <audio 
-          ref={audioRef}
-          src={audioUrl} 
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-          onEnded={() => setIsPlaying(false)}
-          preload="auto"
-        />
+    <Button 
+        onClick={handleTogglePlay} 
+        size="lg" 
+        variant="default" 
+        className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 transition-opacity duration-300 shadow-lg shadow-primary/30"
+        disabled={isLoading}
+    >
+      {isLoading ? (
+        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+      ) : isPlaying ? (
+        <Pause className="mr-2 h-5 w-5" />
+      ) : (
+        <Play className="mr-2 h-5 w-5" />
       )}
-      <Button 
-          onClick={handleTogglePlay} 
-          size="lg" 
-          variant="default" 
-          className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 transition-opacity duration-300 shadow-lg shadow-primary/30"
-          disabled={!audioUrl}
-      >
-        {isPlaying ? <Pause className="mr-2 h-5 w-5" /> : <Play className="mr-2 h-5 w-5" />}
-        {isPlaying ? 'Pause Greeting' : 'Play AI Welcome'}
-      </Button>
-    </>
+      {isLoading ? 'Generating Audio...' : isPlaying ? 'Pause Greeting' : 'Play AI Welcome'}
+    </Button>
   );
 }
