@@ -5,6 +5,7 @@ import { SectionWrapper } from './section-wrapper';
 import Link from 'next/link';
 import { Button } from './ui/button';
 import { Github, Linkedin } from 'lucide-react';
+import { SidebarTrigger } from './ui/sidebar';
 
 export function Hero() {
   
@@ -12,6 +13,10 @@ export function Hero() {
     <SectionWrapper>
       <div className="flex min-h-screen flex-col items-center justify-center text-center">
         
+        <div className="absolute top-5 left-5 z-20">
+          <SidebarTrigger />
+        </div>
+
         <div className="relative w-full max-w-2xl flex items-center justify-center -mt-20">
            {/* Inner Content */}
             <div className="relative z-10 flex flex-col items-center justify-center">

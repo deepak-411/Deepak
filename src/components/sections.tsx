@@ -2,7 +2,7 @@ import { SectionWrapper } from './section-wrapper';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { education, skills, experiences, projects, certifications, achievements } from '@/lib/data';
-import { BookOpen, Briefcase, Code, Cpu, Award, Star, Trophy, List } from 'lucide-react';
+import { BookOpen, Briefcase, Code, Cpu, Award, Star, Trophy, List, Mail } from 'lucide-react';
 
 const SectionHeader = ({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) => (
   <div className="flex flex-col items-center text-center mb-12">
