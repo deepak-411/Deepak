@@ -8,10 +8,11 @@ import { WelcomeAudio } from '@/components/welcome-audio';
 export default async function Home() {
   return (
     <>
-      <WelcomeAudio />
       <AnimatedBackground />
       <main className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Hero />
+        <WelcomeAudio>
+          <Hero />
+        </WelcomeAudio>
 
         <div className="space-y-24 md:space-y-32 my-24 md:my-32">
           <Education />

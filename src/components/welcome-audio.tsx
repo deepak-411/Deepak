@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Children, cloneElement, isValidElement, type ReactNode } from 'react';
 import { welcomeGreeting } from '@/ai/flows/welcome-greeting';
-import { Hero } from './hero';
 
-export function WelcomeAudio() {
+type WelcomeAudioProps = {
+  children: ReactNode;
+};
+
+export function WelcomeAudio({ children }: WelcomeAudioProps) {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -21,17 +24,6 @@ export function WelcomeAudio() {
     fetchAudio();
   }, []);
 
-  useEffect(() => {
-    if (audioUrl && audioRef.current) {
-      // Attempt to autoplay when the component mounts and has a valid URL
-      audioRef.current.play().catch(error => {
-        // Autoplay was prevented. This is a common browser policy.
-        // The user can still start playback manually via the button.
-        console.warn("Autoplay was prevented:", error.message);
-      });
-    }
-  }, [audioUrl]);
-
   const handlePlay = () => {
     audioRef.current?.play();
   };
@@ -40,8 +32,21 @@ export function WelcomeAudio() {
     audioRef.current?.pause();
   };
 
+  useEffect(() => {
+    if (audioUrl && audioRef.current) {
+      audioRef.current.play().catch(error => {
+        console.warn("Autoplay was prevented:", error.message);
+      });
+    }
+  }, [audioUrl]);
+
   const onPlaying = () => setIsPlaying(true);
   const onPauseOrEnd = () => setIsPlaying(false);
+
+  const child = Children.only(children);
+  const childWithProps = isValidElement(child) 
+    ? cloneElement(child as React.ReactElement<any>, { play: handlePlay, pause: handlePause, isPlaying })
+    : child;
 
   return (
     <>
@@ -52,11 +57,10 @@ export function WelcomeAudio() {
           onPlay={onPlaying}
           onPause={onPauseOrEnd}
           onEnded={onPauseOrEnd}
-          // The 'autoPlay' attribute is only a hint for the browser
-          autoPlay 
+          autoPlay
         />
       )}
-      <Hero play={handlePlay} pause={handlePause} isPlaying={isPlaying} />
+      {childWithProps}
     </>
   );
 }
