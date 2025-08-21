@@ -1,52 +1,64 @@
 "use client";
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Play, Pause, Loader2 } from "lucide-react";
 import { aiVoiceGreetings } from '@/ai/flows/ai-voice-greetings';
+import { useToast } from '@/hooks/use-toast';
 
 export function AiVoiceGreeting() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [audioDataUri, setAudioDataUri] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { toast } = useToast();
 
   const handleTogglePlay = async () => {
     if (isLoading) return;
 
-    // If audio is currently playing, pause it.
     if (isPlaying && audioRef.current) {
       audioRef.current.pause();
       setIsPlaying(false);
       return;
     }
     
-    // If audio is paused but already loaded, play it.
     if (!isPlaying && audioRef.current && audioRef.current.src) {
         audioRef.current.play();
         setIsPlaying(true);
         return;
     }
 
-    // If there's no audio yet (first play), generate and play it.
     setIsLoading(true);
     try {
-      // Use a generic greeting for the main page button.
       const result = await aiVoiceGreetings({ name: "visitor" });
       const newAudioDataUri = result.media;
-      setAudioDataUri(newAudioDataUri);
       
       if (!audioRef.current) {
         audioRef.current = new Audio();
         audioRef.current.onended = () => setIsPlaying(false);
+        audioRef.current.onpause = () => setIsPlaying(false);
+        audioRef.current.onplay = () => setIsPlaying(true);
       }
       
       audioRef.current.src = newAudioDataUri;
       await audioRef.current.play();
-      setIsPlaying(true);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to generate or play AI greeting:", error);
-      // Optionally, add a user-facing error message here.
+      
+      const errorMessage = error.message || 'An unknown error occurred.';
+      if (errorMessage.includes('429 Too Many Requests')) {
+         toast({
+          title: "Daily Limit Reached",
+          description: "The AI voice greeting has reached its daily usage limit. Please try again tomorrow.",
+          variant: "destructive",
+        });
+      } else {
+         toast({
+          title: "Error Generating Greeting",
+          description: "Sorry, there was a problem generating the voice greeting. Please try again.",
+          variant: "destructive",
+        });
+      }
+
     } finally {
       setIsLoading(false);
     }
