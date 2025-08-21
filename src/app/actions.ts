@@ -4,9 +4,6 @@ import { z } from 'zod';
 import { Resend } from 'resend';
 import { profile } from '@/lib/data';
 
-if (!process.env.RESEND_API_KEY) {
-  console.log("RESEND_API_KEY is not set. Emails will not be sent.");
-}
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 const contactSchema = z.object({
