@@ -12,12 +12,7 @@ export function Hero() {
     <SectionWrapper>
       <div className="flex min-h-screen flex-col items-center justify-center text-center">
         
-        <div className="relative w-full max-w-2xl aspect-square rounded-full flex items-center justify-center -mt-20">
-           {/* Outer Rings */}
-          <div className="absolute inset-0 rounded-full border-2 border-[hsl(var(--primary)/0.2)] animate-pulse"></div>
-          <div className="absolute inset-4 rounded-full border border-[hsl(var(--primary)/0.1)] animate-pulse animation-delay-[-2s]"></div>
-           <div className="absolute inset-8 rounded-full border border-[hsl(var(--primary)/0.05)]"></div>
-
+        <div className="relative w-full max-w-2xl flex items-center justify-center -mt-20">
            {/* Inner Content */}
             <div className="relative z-10 flex flex-col items-center justify-center">
                  <div className="relative mb-6 h-40 w-40 md:h-48 md:w-48">
@@ -31,6 +26,7 @@ export function Hero() {
                         data-ai-hint="profile picture"
                     />
                     <div className="absolute inset-0 rounded-full border-2 border-primary animate-ping"></div>
+                    <div className="absolute inset-0 rounded-full border-4 border-accent animate-pulse animation-delay-[-2s]"></div>
                 </div>
                 <h1 className="text-5xl md:text-7xl font-bold kbc-title">
                   Deepak Kumar
