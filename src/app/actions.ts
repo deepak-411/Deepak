@@ -21,13 +21,6 @@ export type FormState = {
 };
 
 export async function sendEmail(prevState: FormState, formData: FormData): Promise<FormState> {
-  if (!resend) {
-    return {
-      message: 'The email service is not configured. Please contact the site administrator.',
-      success: false,
-    };
-  }
-
   const validatedFields = contactSchema.safeParse({
     name: formData.get('name'),
     email: formData.get('email'),
@@ -37,7 +30,14 @@ export async function sendEmail(prevState: FormState, formData: FormData): Promi
   if (!validatedFields.success) {
     const firstError = Object.values(validatedFields.error.flatten().fieldErrors)[0]?.[0];
     return {
-      message: firstError || 'Invalid data.',
+      message: firstError || 'Invalid data. Please check your entries.',
+      success: false,
+    };
+  }
+
+  if (!resend) {
+    return {
+      message: 'The email service is not configured. Please contact the site administrator.',
       success: false,
     };
   }
