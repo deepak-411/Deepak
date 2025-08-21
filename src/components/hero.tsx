@@ -3,7 +3,7 @@ import { AiVoiceGreeting } from './ai-voice-greeting';
 import { SectionWrapper } from './section-wrapper';
 import Link from 'next/link';
 import { Button } from './ui/button';
-import { Github, Linkedin } from 'lucide-react';
+import { Download, Github, Linkedin } from 'lucide-react';
 
 export function Hero() {
   return (
@@ -47,6 +47,12 @@ export function Hero() {
             <Link href="https://deepakkumarinnovator.netlify.app/" target="_blank" rel="noopener noreferrer" className="glass-button px-8 py-3 text-lg text-primary-foreground">
                 Visit my official website
             </Link>
+            <Button asChild size="lg" variant="outline">
+              <Link href="#" download>
+                <Download className="mr-2 h-5 w-5" />
+                Download APK
+              </Link>
+            </Button>
             <AiVoiceGreeting />
         </div>
       </div>
