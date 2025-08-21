@@ -7,7 +7,7 @@ import { profile } from '@/lib/data';
 if (!process.env.RESEND_API_KEY) {
   console.log("RESEND_API_KEY is not set. Emails will not be sent.");
 }
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 const contactSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -21,7 +21,7 @@ export type FormState = {
 };
 
 export async function sendEmail(prevState: FormState, formData: FormData): Promise<FormState> {
-  if (!process.env.RESEND_API_KEY) {
+  if (!resend) {
     return {
       message: 'The email service is not configured. Please contact the site administrator.',
       success: false,
