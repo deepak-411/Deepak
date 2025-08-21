@@ -16,6 +16,7 @@ export function AiVoiceGreeting() {
   useEffect(() => {
     async function fetchGreeting() {
       try {
+        // Fetch the pre-generated audio URL
         const greeting = await welcomeGreeting();
         setAudioUrl(greeting.media);
       } catch (error) {
@@ -32,15 +33,18 @@ export function AiVoiceGreeting() {
     fetchGreeting();
   }, [toast]);
 
+  // This effect runs when the audioRef is attached to the audio element.
   useEffect(() => {
-    if (audioUrl && audioRef.current) {
+    if (audioRef.current) {
         // Attempt to autoplay
         audioRef.current.play().then(() => {
             setIsPlaying(true);
         }).catch(error => {
+          // Autoplay was likely prevented by the browser. 
+          // This is expected behavior, so we don't need to show a user-facing error.
+          // The user can manually start the audio with the button.
           console.warn("Autoplay was prevented by the browser.");
-          // Autoplay is often blocked, so we don't need to show a toast here.
-          // The user can manually start the audio.
+          setIsPlaying(false);
         });
     }
   }, [audioUrl]);
@@ -83,6 +87,7 @@ export function AiVoiceGreeting() {
     )
   }
 
+  // Only render the audio element and button once the URL is available
   return (
     <>
       {audioUrl && (
