@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { AiVoiceGreeting } from './ai-voice-greeting';
 import { SectionWrapper } from './section-wrapper';
 import Link from 'next/link';
+import { Button } from './ui/button';
 
 export function Hero() {
   return (
@@ -22,17 +23,14 @@ export function Hero() {
         <h1 className="text-5xl md:text-7xl font-bold threed-text bg-clip-text text-transparent bg-gradient-to-b from-primary-foreground to-muted-foreground">
           Deepak Kumar
         </h1>
-        <p className="mt-4 max-w-2xl text-lg md:text-xl text-muted-foreground">
-          Welcome to my personal profile.
-        </p>
-        <p className="mt-4 max-w-3xl text-2xl md:text-4xl font-bold text-primary-foreground">
+        <p className="mt-4 max-w-3xl text-2xl md:text-4xl font-bold text-primary-foreground glow">
           Innovator • Software Engineer • AI/ML Enthusiast
         </p>
-        <Link href="https://deepakkumarinnovator.netlify.app/" target="_blank" rel="noopener noreferrer" className="mt-4 text-lg text-accent-foreground hover:underline">
-          Visit my official website
-        </Link>
-        <div className="mt-8">
-          <AiVoiceGreeting />
+        <div className="mt-8 flex flex-col items-center gap-6">
+            <Link href="https://deepakkumarinnovator.netlify.app/" target="_blank" rel="noopener noreferrer" className="glass-button px-8 py-3 text-lg text-primary-foreground">
+                Visit my official website
+            </Link>
+            <AiVoiceGreeting />
         </div>
       </div>
     </SectionWrapper>

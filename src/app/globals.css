@@ -114,3 +114,8 @@
 .card-glow {
   box-shadow: 0 0 20px hsl(var(--primary) / 0.1), 0 0 40px hsl(var(--accent) / 0.1);
 }
+
+.glass-button {
+    @apply bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-lg;
+    @apply hover:bg-white/20 transition-all duration-300;
+}
