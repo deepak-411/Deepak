@@ -9,13 +9,12 @@ export function Hero() {
       <div className="flex min-h-screen flex-col items-center justify-center text-center">
         <div className="relative mb-8 h-40 w-40 md:h-48 md:w-48">
           <Image
-            src="https://placehold.co/200x200/6F00FF/FFFFFF.png"
+            src="https://storage.googleapis.com/maker-studio-5a52d.appspot.com/prompt_asset/image_7a6d8d67-4d04-4b5b-a810-7299a9159957.png"
             alt="Deepak Kumar"
             width={200}
             height={200}
             priority
             className="rounded-full object-cover border-4 border-primary shadow-lg"
-            data-ai-hint="man portrait"
           />
            <div className="absolute inset-0 rounded-full border-4 border-primary animate-ping"></div>
         </div>
