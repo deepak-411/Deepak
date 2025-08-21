@@ -5,51 +5,45 @@ import { Button } from "@/components/ui/button";
 import { Play, Pause } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-export function AiVoiceGreeting() {
+export function AiVoiceGreeting({ audioUrl }: { audioUrl: string | null }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
-  const hasAutoPlayed = useRef(false);
 
   useEffect(() => {
-    // Find the audio element once the component is mounted
-    const audioElement = document.getElementById('welcome-audio-player') as HTMLAudioElement;
-    if (audioElement) {
-      audioRef.current = audioElement;
+    // When the component mounts, we create the audio element
+    if (audioUrl) {
+      audioRef.current = new Audio(audioUrl);
+      
+      const audio = audioRef.current;
 
       const handlePlay = () => setIsPlaying(true);
       const handlePause = () => setIsPlaying(false);
-      const handleEnded = () => setIsPlaying(false);
 
-      audioRef.current.addEventListener('play', handlePlay);
-      audioRef.current.addEventListener('pause', handlePause);
-      audioRef.current.addEventListener('ended', handleEnded);
+      audio.addEventListener('play', handlePlay);
+      audio.addEventListener('pause', handlePause);
+      audio.addEventListener('ended', handlePause);
 
       // Attempt to autoplay
-      if (!hasAutoPlayed.current) {
-        const autoplayTimeout = setTimeout(() => {
-          if (audioRef.current && audioRef.current.paused) {
-            audioRef.current.play().catch(err => {
-              console.warn("Autoplay was prevented. User interaction is needed.");
-            });
-          }
-        }, 1000); // 1-second delay to ensure everything is loaded
-        hasAutoPlayed.current = true;
-        return () => clearTimeout(autoplayTimeout);
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.warn("Autoplay was prevented by the browser. User interaction is required.");
+        });
       }
-      
-      // Cleanup listeners on unmount
+
+      // Cleanup on unmount
       return () => {
-        if (audioRef.current) {
-            audioRef.current.removeEventListener('play', handlePlay);
-            audioRef.current.removeEventListener('pause', handlePause);
-            audioRef.current.removeEventListener('ended', handleEnded);
-        }
+        audio.removeEventListener('play', handlePlay);
+        audio.removeEventListener('pause', handlePause);
+        audio.removeEventListener('ended', handlePause);
+        audio.pause();
+        audioRef.current = null;
       };
     }
-  }, []);
+  }, [audioUrl]);
 
-  const handleTogglePlay = async () => {
+  const handleTogglePlay = () => {
     if (!audioRef.current) {
       toast({
           title: "Audio Not Ready",
@@ -66,7 +60,7 @@ export function AiVoiceGreeting() {
           console.error("Audio play failed:", err)
           toast({
               title: "Playback Error",
-              description: "Could not play the audio. Please interact with the page first.",
+              description: "Could not play the audio. Your browser may be blocking it.",
               variant: "destructive"
           })
       });
@@ -79,6 +73,7 @@ export function AiVoiceGreeting() {
         size="lg" 
         variant="default" 
         className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 transition-opacity duration-300 shadow-lg shadow-primary/30"
+        disabled={!audioUrl}
     >
       {isPlaying ? <Pause className="mr-2 h-5 w-5" /> : <Play className="mr-2 h-5 w-5" />}
       {isPlaying ? 'Pause Greeting' : 'Play AI Welcome'}
