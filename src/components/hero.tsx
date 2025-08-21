@@ -9,7 +9,7 @@ export function Hero() {
       <div className="flex min-h-screen flex-col items-center justify-center text-center">
         <div className="relative mb-8 h-40 w-40 md:h-48 md:w-48">
           <Image
-            src="https://placehold.co/200x200.png"
+            src="https://media.licdn.com/dms/image/v2/D5603AQE53GASePk1fg/profile-displayphoto-shrink_200_200/B56ZV_zCToHEAg-/0/1741605841497?e=2147483647&v=beta&t=SfoL_GJQIBprLHH2zIf0TkwTNLVKPT9h10OtLeqkpmo"
             alt="Deepak Kumar"
             width={200}
             height={200}
