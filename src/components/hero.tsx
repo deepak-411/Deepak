@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { profile } from '@/lib/data';
 import { AiVoiceGreeting } from './ai-voice-greeting';
 import { SectionWrapper } from './section-wrapper';
 
@@ -23,7 +22,7 @@ export function Hero() {
           Deepak Kumar
         </h1>
         <p className="mt-4 max-w-2xl text-lg md:text-xl text-muted-foreground">
-          Welcome to my personal profile. I'm a {profile.title}.
+          Welcome to my personal profile.
         </p>
         <div className="mt-8">
           <AiVoiceGreeting />
