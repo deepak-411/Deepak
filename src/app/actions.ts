@@ -41,7 +41,7 @@ export async function sendEmail(prevState: FormState, formData: FormData): Promi
   
   try {
     const resend = new Resend(process.env.RESEND_API_KEY);
-    const { data, error } = await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: 'Deepak Kumar Portfolio <onboarding@resend.dev>',
       to: [profile.email],
       subject: `New message from ${name} via your portfolio`,
