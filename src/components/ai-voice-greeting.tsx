@@ -28,6 +28,8 @@ export function AiVoiceGreeting({ audioUrl }: { audioUrl: string | null }) {
       const playPromise = audio.play();
       if (playPromise !== undefined) {
         playPromise.catch(error => {
+          // Autoplay was prevented. This is expected in many browsers.
+          // The user can still start playback with the button.
           console.warn("Autoplay was prevented by the browser. User interaction is required.");
         });
       }
