@@ -9,49 +9,58 @@ export function AiVoiceGreeting() {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
+  const hasAutoPlayed = useRef(false);
 
   useEffect(() => {
-    // On component mount, try to find the existing audio element from WelcomeAudio
-    const existingAudioElement = document.getElementById('welcome-audio-player') as HTMLAudioElement;
-    if (existingAudioElement) {
-        audioRef.current = existingAudioElement;
-        
-        const handlePlay = () => setIsPlaying(true);
-        const handlePause = () => setIsPlaying(false);
-        const handleEnded = () => setIsPlaying(false);
+    // Find the audio element once the component is mounted
+    const audioElement = document.getElementById('welcome-audio-player') as HTMLAudioElement;
+    if (audioElement) {
+      audioRef.current = audioElement;
 
-        audioRef.current.addEventListener('play', handlePlay);
-        audioRef.current.addEventListener('pause', handlePause);
-        audioRef.current.addEventListener('ended', handleEnded);
+      const handlePlay = () => setIsPlaying(true);
+      const handlePause = () => setIsPlaying(false);
+      const handleEnded = () => setIsPlaying(false);
 
-        // Check initial state
-        if (!audioRef.current.paused) {
-            setIsPlaying(true);
+      audioRef.current.addEventListener('play', handlePlay);
+      audioRef.current.addEventListener('pause', handlePause);
+      audioRef.current.addEventListener('ended', handleEnded);
+
+      // Attempt to autoplay
+      if (!hasAutoPlayed.current) {
+        const autoplayTimeout = setTimeout(() => {
+          if (audioRef.current && audioRef.current.paused) {
+            audioRef.current.play().catch(err => {
+              console.warn("Autoplay was prevented. User interaction is needed.");
+            });
+          }
+        }, 1000); // 1-second delay to ensure everything is loaded
+        hasAutoPlayed.current = true;
+        return () => clearTimeout(autoplayTimeout);
+      }
+      
+      // Cleanup listeners on unmount
+      return () => {
+        if (audioRef.current) {
+            audioRef.current.removeEventListener('play', handlePlay);
+            audioRef.current.removeEventListener('pause', handlePause);
+            audioRef.current.removeEventListener('ended', handleEnded);
         }
-
-        return () => {
-            if (audioRef.current) {
-                audioRef.current.removeEventListener('play', handlePlay);
-                audioRef.current.removeEventListener('pause', handlePause);
-                audioRef.current.removeEventListener('ended', handleEnded);
-            }
-        };
+      };
     }
   }, []);
 
   const handleTogglePlay = async () => {
     if (!audioRef.current) {
-        toast({
-            title: "Audio Not Ready",
-            description: "The welcome audio is still loading. Please wait a moment.",
-            variant: "destructive",
-        });
-        return;
+      toast({
+          title: "Audio Not Ready",
+          description: "The welcome audio is still loading. Please wait a moment.",
+          variant: "destructive",
+      });
+      return;
     }
 
     if (isPlaying) {
       audioRef.current.pause();
-      setIsPlaying(false);
     } else {
       audioRef.current.play().catch(err => {
           console.error("Audio play failed:", err)
@@ -61,7 +70,6 @@ export function AiVoiceGreeting() {
               variant: "destructive"
           })
       });
-      setIsPlaying(true);
     }
   };
 
