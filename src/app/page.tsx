@@ -3,16 +3,13 @@ import { Chatbot } from '@/components/chatbot';
 import { Contact } from '@/components/contact';
 import { Hero } from '@/components/hero';
 import { Achievements, Certifications, Education, Experience, Projects, Skills } from '@/components/sections';
-import { WelcomeAudio } from '@/components/welcome-audio';
 
 export default async function Home() {
   return (
     <>
       <AnimatedBackground />
       <main className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <WelcomeAudio>
-          <Hero />
-        </WelcomeAudio>
+        <Hero />
 
         <div className="space-y-24 md:space-y-32 my-24 md:my-32">
           <Education />

@@ -4,20 +4,10 @@ import { AiVoiceGreeting } from './ai-voice-greeting';
 import { SectionWrapper } from './section-wrapper';
 import Link from 'next/link';
 import { Button } from './ui/button';
-import { Download, Github, Linkedin } from 'lucide-react';
-
-type HeroProps = {
-  play?: () => void;
-  pause?: () => void;
-  isPlaying?: boolean;
-}
+import { Github, Linkedin } from 'lucide-react';
 
 // This is a Client Component because it receives functions as props.
-export function Hero({ play, pause, isPlaying }: HeroProps) {
-  
-  const handlePlay = play || (() => {});
-  const handlePause = pause || (() => {});
-  const playing = isPlaying || false;
+export function Hero() {
   
   return (
     <SectionWrapper>
@@ -60,7 +50,7 @@ export function Hero({ play, pause, isPlaying }: HeroProps) {
             <Link href="https://deepakkumarinnovator.netlify.app/" target="_blank" rel="noopener noreferrer" className="glass-button px-8 py-3 text-lg text-primary-foreground">
                 Visit my official website
             </Link>
-            <AiVoiceGreeting play={handlePlay} pause={handlePause} isPlaying={playing} />
+            <AiVoiceGreeting />
         </div>
       </div>
     </SectionWrapper>

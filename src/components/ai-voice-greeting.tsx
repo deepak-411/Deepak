@@ -1,23 +1,78 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
-import { Play, Pause } from "lucide-react";
-import { welcomeGreeting } from '@/ai/flows/welcome-greeting';
+import { Play, Pause, Loader2 } from "lucide-react";
+import { aiVoiceGreetings } from '@/ai/flows/ai-voice-greetings';
 
-type AiVoiceGreetingProps = {
-  play: () => void;
-  pause: () => void;
-  isPlaying: boolean;
-};
+export function AiVoiceGreeting() {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-export function AiVoiceGreeting({ play, pause, isPlaying }: AiVoiceGreetingProps) {
-  const handleTogglePlay = () => {
-    if (isPlaying) {
-      pause();
-    } else {
-      play();
+  const handleTogglePlay = async () => {
+    if (isLoading) return;
+
+    // If audio is currently playing, pause it.
+    if (isPlaying && audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+      return;
     }
+    
+    // If audio is paused, play it.
+    if (!isPlaying && audioRef.current && audioRef.current.src) {
+        audioRef.current.play();
+        setIsPlaying(true);
+        return;
+    }
+
+    // If there's no audio yet, generate and play it.
+    setIsLoading(true);
+    try {
+      // Use a generic greeting for the main page button.
+      const result = await aiVoiceGreetings({ name: "visitor" });
+      const audioDataUri = result.media;
+      
+      if (!audioRef.current) {
+        audioRef.current = new Audio();
+      }
+      audioRef.current.src = audioDataUri;
+      audioRef.current.onended = () => setIsPlaying(false);
+      
+      await audioRef.current.play();
+      setIsPlaying(true);
+    } catch (error) {
+      console.error("Failed to generate or play AI greeting:", error);
+      // Optionally, add a user-facing error message here.
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getButtonContent = () => {
+    if (isLoading) {
+      return (
+        <>
+          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+          Generating...
+        </>
+      );
+    }
+    if (isPlaying) {
+      return (
+        <>
+          <Pause className="mr-2 h-5 w-5" />
+          Pause Greeting
+        </>
+      );
+    }
+    return (
+      <>
+        <Play className="mr-2 h-5 w-5" />
+        Play AI Welcome
+      </>
+    );
   };
 
   return (
@@ -26,13 +81,9 @@ export function AiVoiceGreeting({ play, pause, isPlaying }: AiVoiceGreetingProps
       size="lg" 
       variant="default" 
       className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 transition-opacity duration-300 shadow-lg shadow-primary/30"
+      disabled={isLoading}
     >
-      {isPlaying ? (
-        <Pause className="mr-2 h-5 w-5" />
-      ) : (
-        <Play className="mr-2 h-5 w-5" />
-      )}
-      {isPlaying ? 'Pause Greeting' : 'Play AI Welcome'}
+      {getButtonContent()}
     </Button>
   );
 }
