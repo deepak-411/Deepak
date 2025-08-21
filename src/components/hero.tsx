@@ -1,6 +1,5 @@
 "use client";
 import Image from 'next/image';
-import { AiVoiceGreeting } from './ai-voice-greeting';
 import { SectionWrapper } from './section-wrapper';
 import Link from 'next/link';
 import { Button } from './ui/button';
@@ -61,7 +60,6 @@ export function Hero() {
              <Link href="https://deepakkumarinnovator.netlify.app/" target="_blank" rel="noopener noreferrer" className="glass-button px-8 py-3 text-lg text-primary-foreground border-primary/50 hover:border-primary">
                 Visit my official website
             </Link>
-            <AiVoiceGreeting />
         </div>
       </div>
     </SectionWrapper>

@@ -43,7 +43,7 @@ const aiVoiceGreetingsFlow = ai.defineFlow(
           },
         },
       },
-      prompt: `Welcome to Deepak Kumar's personal profile, ${input.name}! I hope you enjoy your visit.`,
+      prompt: `Welcome to my personal profile. This is Deepak Kumar. Here are the official details about me.`,
     });
     if (!media) {
       throw new Error('no media returned');
