@@ -1,7 +1,7 @@
 export const profile = {
   name: "Deepak Kumar",
   title: "Software Engineer | Full-Stack Developer | AI/ML Enthusiast",
-  email: "dk3624897@gmail.com",
+  email: "dk201u@gmail.com",
   phone: "+917992298486",
 };
 

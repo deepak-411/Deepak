@@ -28,7 +28,7 @@ export async function aiChatbot(input: AIChatbotInput): Promise<AIChatbotOutput>
 const deepakKumarProfile = `
 Deepak Kumar
 Software Engineer | Full-Stack Developer | AI/ML Enthusiast
-+917992298486 | dk3624897@gmail.com | LinkedIn: Deepak Kumar | GitHub: deepak-411
++917992298486 | dk201u@gmail.com | LinkedIn: Deepak Kumar | GitHub: deepak-411
 
 Education
 Maharishi Markandeshwar (Deemed to be University)
