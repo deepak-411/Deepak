@@ -4,8 +4,6 @@ import { z } from 'zod';
 import { Resend } from 'resend';
 import { profile } from '@/lib/data';
 
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
-
 const contactSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -18,6 +16,13 @@ export type FormState = {
 };
 
 export async function sendEmail(prevState: FormState, formData: FormData): Promise<FormState> {
+  if (!process.env.RESEND_API_KEY) {
+    return {
+      message: 'The email service is not configured because the RESEND_API_KEY is missing from the .env file.',
+      success: false,
+    };
+  }
+
   const validatedFields = contactSchema.safeParse({
     name: formData.get('name'),
     email: formData.get('email'),
@@ -31,15 +36,9 @@ export async function sendEmail(prevState: FormState, formData: FormData): Promi
       success: false,
     };
   }
-
-  if (!resend) {
-    return {
-      message: 'The email service is not configured because the RESEND_API_KEY is missing from the .env file.',
-      success: false,
-    };
-  }
   
   const { name, email, message } = validatedFields.data;
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
   try {
     const { data, error } = await resend.emails.send({
