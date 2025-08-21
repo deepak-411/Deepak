@@ -37,7 +37,7 @@ export async function sendEmail(prevState: FormState, formData: FormData): Promi
 
   if (!resend) {
     return {
-      message: 'The email service is not configured. Please contact the site administrator.',
+      message: 'The email service is not configured because the RESEND_API_KEY is missing from the .env file.',
       success: false,
     };
   }
