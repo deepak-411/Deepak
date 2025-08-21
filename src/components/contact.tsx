@@ -1,7 +1,7 @@
 "use client";
 
-import { useFormState, useFormStatus } from 'react-dom';
-import { useEffect } from 'react';
+import { useActionState, useEffect } from 'react';
+import { useFormStatus } from 'react-dom';
 import { sendEmail, type FormState } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { SectionWrapper } from './section-wrapper';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Mail, Send } from 'lucide-react';
+import { Card, CardContent } from "@/components/ui/card";
 
 const initialState: FormState = {
   message: '',
@@ -27,7 +28,7 @@ function SubmitButton() {
 }
 
 export function Contact() {
-  const [state, formAction] = useFormState(sendEmail, initialState);
+  const [state, formAction] = useActionState(sendEmail, initialState);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -76,5 +77,3 @@ export function Contact() {
     </SectionWrapper>
   );
 }
-// Add Card and CardContent to imports
-import { Card, CardContent } from "@/components/ui/card";
