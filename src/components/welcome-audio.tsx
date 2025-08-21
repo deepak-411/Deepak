@@ -7,38 +7,41 @@ export function WelcomeAudio({ audioUrl }: { audioUrl: string | null }) {
   const hasPlayed = useRef(false);
 
   useEffect(() => {
-    if (!audioUrl || hasPlayed.current) {
+    // This effect now only handles playing the audio, not creating it.
+    if (!audioUrl || hasPlayed.current || !audioRef.current) {
       return;
     }
 
     const playAudio = () => {
-      // Ensure we have a valid audio element before playing
-      if (audioRef.current && audioRef.current.src) {
-        audioRef.current.play().catch(error => {
-          console.warn("Autoplay was prevented by the browser.", error);
-          // Fallback for browsers that block autoplay: play on first user interaction
+      if (audioRef.current) {
+         audioRef.current.play().catch(error => {
+          console.warn("Autoplay was prevented by the browser. A user interaction is required.", error);
+          // Set up a one-time event listener to play on the first user interaction.
           const playOnFirstInteraction = () => {
             if (audioRef.current && !hasPlayed.current) {
               audioRef.current.play().catch(err => console.error("Failed to play on interaction.", err));
-              hasPlayed.current = true;
+              hasPlayed.current = true; // Mark as played
             }
+            // Clean up listeners
             window.removeEventListener('click', playOnFirstInteraction);
             window.removeEventListener('keydown', playOnFirstInteraction);
           };
           window.addEventListener('click', playOnFirstInteraction, { once: true });
           window.addEventListener('keydown', playOnFirstInteraction, { once: true });
         });
-        hasPlayed.current = true; // Mark as played to prevent re-playing on re-renders
+        hasPlayed.current = true; // Mark that we've attempted to play
       }
     };
-
-    // Delaying the play slightly can sometimes help with autoplay policies.
+    
+    // A small delay can help with browser autoplay policies.
     const timeoutId = setTimeout(playAudio, 500);
 
     return () => clearTimeout(timeoutId);
-  }, [audioUrl]);
 
-  // Only render the audio element if the URL is available
+  }, [audioUrl]);
+  
+  // Conditionally render the audio element only when audioUrl is a valid string.
+  // This is the key fix for the "no supported sources" error.
   if (!audioUrl) {
     return null;
   }
