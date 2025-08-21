@@ -3,6 +3,7 @@ import { AiVoiceGreeting } from './ai-voice-greeting';
 import { SectionWrapper } from './section-wrapper';
 import Link from 'next/link';
 import { Button } from './ui/button';
+import { Github, Linkedin } from 'lucide-react';
 
 export function Hero() {
   return (
@@ -26,6 +27,22 @@ export function Hero() {
         <p className="mt-4 max-w-3xl text-2xl md:text-4xl font-bold text-primary-foreground glow">
           Innovator • Software Engineer • AI/ML Enthusiast
         </p>
+
+        <div className="mt-6 flex flex-wrap justify-center gap-4">
+            <Button asChild variant="ghost">
+                <Link href="https://in.linkedin.com/in/deepak-kumar-587a011a5" target="_blank" rel="noopener noreferrer">
+                    <Linkedin className="mr-2 h-5 w-5" />
+                    LinkedIn
+                </Link>
+            </Button>
+            <Button asChild variant="ghost">
+                <Link href="https://github.com/deepak-411" target="_blank" rel="noopener noreferrer">
+                    <Github className="mr-2 h-5 w-5" />
+                    GitHub
+                </Link>
+            </Button>
+        </div>
+
         <div className="mt-8 flex flex-col items-center gap-6">
             <Link href="https://deepakkumarinnovator.netlify.app/" target="_blank" rel="noopener noreferrer" className="glass-button px-8 py-3 text-lg text-primary-foreground">
                 Visit my official website
