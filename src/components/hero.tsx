@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { AiVoiceGreeting } from './ai-voice-greeting';
 import { SectionWrapper } from './section-wrapper';
+import Link from 'next/link';
 
 export function Hero() {
   return (
@@ -24,6 +25,12 @@ export function Hero() {
         <p className="mt-4 max-w-2xl text-lg md:text-xl text-muted-foreground">
           Welcome to my personal profile.
         </p>
+        <p className="mt-4 max-w-3xl text-2xl md:text-4xl font-bold text-primary-foreground">
+          Innovator • Software Engineer • AI/ML Enthusiast
+        </p>
+        <Link href="https://deepakkumarinnovator.netlify.app/" target="_blank" rel="noopener noreferrer" className="mt-4 text-lg text-accent-foreground hover:underline">
+          Visit my official website
+        </Link>
         <div className="mt-8">
           <AiVoiceGreeting />
         </div>
