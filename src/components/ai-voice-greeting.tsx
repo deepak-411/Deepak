@@ -8,6 +8,7 @@ import { aiVoiceGreetings } from '@/ai/flows/ai-voice-greetings';
 export function AiVoiceGreeting() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [audioDataUri, setAudioDataUri] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const handleTogglePlay = async () => {
@@ -20,26 +21,27 @@ export function AiVoiceGreeting() {
       return;
     }
     
-    // If audio is paused, play it.
+    // If audio is paused but already loaded, play it.
     if (!isPlaying && audioRef.current && audioRef.current.src) {
         audioRef.current.play();
         setIsPlaying(true);
         return;
     }
 
-    // If there's no audio yet, generate and play it.
+    // If there's no audio yet (first play), generate and play it.
     setIsLoading(true);
     try {
       // Use a generic greeting for the main page button.
       const result = await aiVoiceGreetings({ name: "visitor" });
-      const audioDataUri = result.media;
+      const newAudioDataUri = result.media;
+      setAudioDataUri(newAudioDataUri);
       
       if (!audioRef.current) {
         audioRef.current = new Audio();
+        audioRef.current.onended = () => setIsPlaying(false);
       }
-      audioRef.current.src = audioDataUri;
-      audioRef.current.onended = () => setIsPlaying(false);
       
+      audioRef.current.src = newAudioDataUri;
       await audioRef.current.play();
       setIsPlaying(true);
     } catch (error) {
