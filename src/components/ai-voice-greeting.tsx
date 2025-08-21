@@ -33,32 +33,15 @@ export function AiVoiceGreeting() {
   }, [toast]);
 
   useEffect(() => {
-    if (audioUrl) {
-      audioRef.current = new Audio(audioUrl);
-      const audio = audioRef.current;
-
-      const handlePlay = () => setIsPlaying(true);
-      const handlePause = () => setIsPlaying(false);
-
-      audio.addEventListener('play', handlePlay);
-      audio.addEventListener('pause', handlePause);
-      audio.addEventListener('ended', handlePause);
-
-      // Attempt to autoplay
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(error => {
+    if (audioUrl && audioRef.current) {
+        // Attempt to autoplay
+        audioRef.current.play().then(() => {
+            setIsPlaying(true);
+        }).catch(error => {
           console.warn("Autoplay was prevented by the browser.");
+          // Autoplay is often blocked, so we don't need to show a toast here.
+          // The user can manually start the audio.
         });
-      }
-
-      return () => {
-        audio.removeEventListener('play', handlePlay);
-        audio.removeEventListener('pause', handlePause);
-        audio.removeEventListener('ended', handlePause);
-        audio.pause();
-        audioRef.current = null;
-      };
     }
   }, [audioUrl]);
 
@@ -101,15 +84,27 @@ export function AiVoiceGreeting() {
   }
 
   return (
-    <Button 
-        onClick={handleTogglePlay} 
-        size="lg" 
-        variant="default" 
-        className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 transition-opacity duration-300 shadow-lg shadow-primary/30"
-        disabled={!audioUrl}
-    >
-      {isPlaying ? <Pause className="mr-2 h-5 w-5" /> : <Play className="mr-2 h-5 w-5" />}
-      {isPlaying ? 'Pause Greeting' : 'Play AI Welcome'}
-    </Button>
+    <>
+      {audioUrl && (
+        <audio 
+          ref={audioRef}
+          src={audioUrl} 
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          onEnded={() => setIsPlaying(false)}
+          preload="auto"
+        />
+      )}
+      <Button 
+          onClick={handleTogglePlay} 
+          size="lg" 
+          variant="default" 
+          className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 transition-opacity duration-300 shadow-lg shadow-primary/30"
+          disabled={!audioUrl}
+      >
+        {isPlaying ? <Pause className="mr-2 h-5 w-5" /> : <Play className="mr-2 h-5 w-5" />}
+        {isPlaying ? 'Pause Greeting' : 'Play AI Welcome'}
+      </Button>
+    </>
   );
 }
