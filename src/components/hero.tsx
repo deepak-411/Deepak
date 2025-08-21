@@ -47,12 +47,6 @@ export function Hero() {
             <Link href="https://deepakkumarinnovator.netlify.app/" target="_blank" rel="noopener noreferrer" className="glass-button px-8 py-3 text-lg text-primary-foreground">
                 Visit my official website
             </Link>
-            <Button asChild size="lg" variant="outline">
-              <Link href="#" download>
-                <Download className="mr-2 h-5 w-5" />
-                Download APK
-              </Link>
-            </Button>
             <AiVoiceGreeting />
         </div>
       </div>
