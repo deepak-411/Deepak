@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Sparkles, Volume2, Play, Pause } from "lucide-react";
-import { welcomeGreeting } from '@/ai/flows/welcome-greeting';
+import { Play, Pause } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export function AiVoiceGreeting() {
@@ -11,30 +10,43 @@ export function AiVoiceGreeting() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
 
-  const getAudioUrl = async () => {
-    try {
-        const greeting = await welcomeGreeting();
-        return greeting.media;
-    } catch (error) {
-        console.error("Error getting audio URL", error);
-        toast({
-            title: "Error",
-            description: "Could not load the welcome audio.",
-            variant: "destructive",
-        });
-        return null;
+  useEffect(() => {
+    // On component mount, try to find the existing audio element from WelcomeAudio
+    const existingAudioElement = document.getElementById('welcome-audio-player') as HTMLAudioElement;
+    if (existingAudioElement) {
+        audioRef.current = existingAudioElement;
+        
+        const handlePlay = () => setIsPlaying(true);
+        const handlePause = () => setIsPlaying(false);
+        const handleEnded = () => setIsPlaying(false);
+
+        audioRef.current.addEventListener('play', handlePlay);
+        audioRef.current.addEventListener('pause', handlePause);
+        audioRef.current.addEventListener('ended', handleEnded);
+
+        // Check initial state
+        if (!audioRef.current.paused) {
+            setIsPlaying(true);
+        }
+
+        return () => {
+            if (audioRef.current) {
+                audioRef.current.removeEventListener('play', handlePlay);
+                audioRef.current.removeEventListener('pause', handlePause);
+                audioRef.current.removeEventListener('ended', handleEnded);
+            }
+        };
     }
-  }
+  }, []);
 
   const handleTogglePlay = async () => {
     if (!audioRef.current) {
-        const url = await getAudioUrl();
-        if (url) {
-            audioRef.current = new Audio(url);
-            audioRef.current.onended = () => setIsPlaying(false);
-        } else {
-            return;
-        }
+        toast({
+            title: "Audio Not Ready",
+            description: "The welcome audio is still loading. Please wait a moment.",
+            variant: "destructive",
+        });
+        return;
     }
 
     if (isPlaying) {
@@ -45,7 +57,7 @@ export function AiVoiceGreeting() {
           console.error("Audio play failed:", err)
           toast({
               title: "Playback Error",
-              description: "Could not play the audio.",
+              description: "Could not play the audio. Please interact with the page first.",
               variant: "destructive"
           })
       });

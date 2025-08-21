@@ -16,10 +16,11 @@ export function WelcomeAudio({ audioUrl }: { audioUrl: string | null }) {
       if (audioRef.current && audioRef.current.src) {
         audioRef.current.play().catch(error => {
           console.warn("Autoplay was prevented by the browser.", error);
-          // Fallback for browsers that block autoplay
+          // Fallback for browsers that block autoplay: play on first user interaction
           const playOnFirstInteraction = () => {
-            if (audioRef.current) {
+            if (audioRef.current && !hasPlayed.current) {
               audioRef.current.play().catch(err => console.error("Failed to play on interaction.", err));
+              hasPlayed.current = true;
             }
             window.removeEventListener('click', playOnFirstInteraction);
             window.removeEventListener('keydown', playOnFirstInteraction);
@@ -42,5 +43,5 @@ export function WelcomeAudio({ audioUrl }: { audioUrl: string | null }) {
     return null;
   }
 
-  return <audio ref={audioRef} src={audioUrl} className="hidden" preload="auto" />;
+  return <audio id="welcome-audio-player" ref={audioRef} src={audioUrl} className="hidden" preload="auto" />;
 }
