@@ -35,6 +35,7 @@ export function WelcomeAudio({ children }: WelcomeAudioProps) {
   useEffect(() => {
     if (audioUrl && audioRef.current) {
       audioRef.current.play().catch(error => {
+        // This warning is expected on browsers that block autoplay
         console.warn("Autoplay was prevented:", error.message);
       });
     }
@@ -43,6 +44,16 @@ export function WelcomeAudio({ children }: WelcomeAudioProps) {
   const onPlaying = () => setIsPlaying(true);
   const onPauseOrEnd = () => setIsPlaying(false);
 
+  // Don't render anything until the audio URL is fetched
+  if (!audioUrl) {
+    // We can render the hero section without the audio functionality while it loads
+     const child = Children.only(children);
+     const childWithProps = isValidElement(child) 
+        ? cloneElement(child as React.ReactElement<any>, { play: ()=>{}, pause: ()=>{}, isPlaying: false })
+        : child;
+    return <>{childWithProps}</>;
+  }
+
   const child = Children.only(children);
   const childWithProps = isValidElement(child) 
     ? cloneElement(child as React.ReactElement<any>, { play: handlePlay, pause: handlePause, isPlaying })
@@ -50,16 +61,14 @@ export function WelcomeAudio({ children }: WelcomeAudioProps) {
 
   return (
     <>
-      {audioUrl && (
-        <audio 
-          ref={audioRef} 
-          src={audioUrl} 
-          onPlay={onPlaying}
-          onPause={onPauseOrEnd}
-          onEnded={onPauseOrEnd}
-          autoPlay
-        />
-      )}
+      <audio 
+        ref={audioRef} 
+        src={audioUrl} 
+        onPlay={onPlaying}
+        onPause={onPauseOrEnd}
+        onEnded={onPauseOrEnd}
+        autoPlay
+      />
       {childWithProps}
     </>
   );
