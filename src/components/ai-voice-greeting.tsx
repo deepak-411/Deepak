@@ -2,19 +2,39 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Play, Pause } from "lucide-react";
+import { Play, Pause, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { welcomeGreeting } from '@/ai/flows/welcome-greeting';
 
-export function AiVoiceGreeting({ audioUrl }: { audioUrl: string | null }) {
+export function AiVoiceGreeting() {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
-    // When the component mounts, we create the audio element
+    async function fetchGreeting() {
+      try {
+        const greeting = await welcomeGreeting();
+        setAudioUrl(greeting.media);
+      } catch (error) {
+        console.error("Failed to fetch greeting:", error);
+        toast({
+          title: "Audio Error",
+          description: "Could not load the welcome greeting.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchGreeting();
+  }, [toast]);
+
+  useEffect(() => {
     if (audioUrl) {
       audioRef.current = new Audio(audioUrl);
-      
       const audio = audioRef.current;
 
       const handlePlay = () => setIsPlaying(true);
@@ -28,13 +48,10 @@ export function AiVoiceGreeting({ audioUrl }: { audioUrl: string | null }) {
       const playPromise = audio.play();
       if (playPromise !== undefined) {
         playPromise.catch(error => {
-          // Autoplay was prevented. This is expected in many browsers.
-          // The user can still start playback with the button.
-          console.warn("Autoplay was prevented by the browser. User interaction is required.");
+          console.warn("Autoplay was prevented by the browser.");
         });
       }
 
-      // Cleanup on unmount
       return () => {
         audio.removeEventListener('play', handlePlay);
         audio.removeEventListener('pause', handlePause);
@@ -68,6 +85,20 @@ export function AiVoiceGreeting({ audioUrl }: { audioUrl: string | null }) {
       });
     }
   };
+
+  if (isLoading) {
+    return (
+      <Button 
+          size="lg" 
+          variant="default" 
+          className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 transition-opacity duration-300 shadow-lg shadow-primary/30"
+          disabled={true}
+      >
+        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+        Loading AI Welcome...
+      </Button>
+    )
+  }
 
   return (
     <Button 

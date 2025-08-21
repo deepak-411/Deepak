@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from './ui/button';
 import { Github, Linkedin } from 'lucide-react';
 
-export function Hero({ audioUrl }: { audioUrl: string | null }) {
+export function Hero() {
   return (
     <SectionWrapper>
       <div className="flex min-h-screen flex-col items-center justify-center text-center">
@@ -47,7 +47,7 @@ export function Hero({ audioUrl }: { audioUrl: string | null }) {
             <Link href="https://deepakkumarinnovator.netlify.app/" target="_blank" rel="noopener noreferrer" className="glass-button px-8 py-3 text-lg text-primary-foreground">
                 Visit my official website
             </Link>
-            <AiVoiceGreeting audioUrl={audioUrl} />
+            <AiVoiceGreeting />
         </div>
       </div>
     </SectionWrapper>
