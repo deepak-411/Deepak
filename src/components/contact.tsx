@@ -1,46 +1,11 @@
 "use client";
 
-import { useActionState, useEffect } from 'react';
-import { useFormStatus } from 'react-dom';
-import { sendEmail, type FormState } from '@/app/actions';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
 import { SectionWrapper } from './section-wrapper';
-import { useToast } from '@/hooks/use-toast';
-import { Loader2, Mail, Send } from 'lucide-react';
-import { Card, CardContent } from "@/components/ui/card";
-
-const initialState: FormState = {
-  message: '',
-  success: false,
-};
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" disabled={pending} className="w-full md:w-auto">
-      {pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
-      {pending ? 'Sending...' : 'Send Message'}
-    </Button>
-  );
-}
+import { Mail, ArrowRight } from 'lucide-react';
+import { Button } from './ui/button';
+import Link from 'next/link';
 
 export function Contact() {
-  const [state, formAction] = useActionState(sendEmail, initialState);
-  const { toast } = useToast();
-
-  useEffect(() => {
-    if (state.message) {
-      toast({
-        title: state.success ? 'Message Sent!' : 'Error',
-        description: state.message,
-        variant: state.success ? 'default' : 'destructive',
-      });
-    }
-  }, [state, toast]);
-
   return (
     <SectionWrapper>
       <section id="contact">
@@ -49,30 +14,16 @@ export function Contact() {
                 <Mail className="h-8 w-8" />
             </div>
             <h2 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-foreground to-muted-foreground">Get In Touch</h2>
-            <p className="mt-2 max-w-2xl text-lg text-muted-foreground">Have a question or want to work together? Drop me a message.</p>
+            <p className="mt-2 max-w-2xl text-lg text-muted-foreground">Have a job opportunity or a project idea? I'd love to hear from you. Click the button below to open my dedicated contact page.</p>
         </div>
         
-        <Card className="max-w-2xl mx-auto card-glow">
-          <CardContent className="p-6 md:p-8">
-            <form action={formAction} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" name="name" type="text" placeholder="Your Name" required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" name="email" type="email" placeholder="your@email.com" required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="message">Message</Label>
-                <Textarea id="message" name="message" placeholder="Your message..." required minLength={10} rows={5} />
-              </div>
-              <div className="flex justify-end">
-                <SubmitButton />
-              </div>
-            </form>
-          </CardContent>
-        </Card>
+        <div className="flex justify-center">
+            <Button asChild size="lg">
+                <Link href="/contact">
+                    Contact Me <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+            </Button>
+        </div>
       </section>
     </SectionWrapper>
   );
