@@ -129,19 +129,16 @@ Achievements
 
 const aiChatbotPrompt = ai.definePrompt({
   name: 'aiChatbotPrompt',
-  input: {schema: z.object({
-    question: AIChatbotInputSchema.shape.question,
-    deepakKumarProfile: z.string(),
-  })},
+  input: {schema: AIChatbotInputSchema},
   output: {schema: AIChatbotOutputSchema},
-  prompt: `You are a chatbot answering questions about Deepak Kumar.
+  system: `You are a chatbot answering questions about Deepak Kumar.
   Use the following information about Deepak Kumar to answer the user's question.
   If the question cannot be answered based on the information provided, respond with "I am sorry, I don't have enough information to answer that question."
 
   Deepak Kumar's Profile:
-  {{{deepakKumarProfile}}}
-
-  User's Question: {{question}}`,
+  ${deepakKumarProfile}
+  `,
+  prompt: `User's Question: {{question}}`,
 });
 
 const aiChatbotFlow = ai.defineFlow(
@@ -150,11 +147,8 @@ const aiChatbotFlow = ai.defineFlow(
     inputSchema: AIChatbotInputSchema,
     outputSchema: AIChatbotOutputSchema,
   },
-  async input => {
-    const {output} = await aiChatbotPrompt({
-      ...input,
-      deepakKumarProfile,
-    });
+  async (input) => {
+    const {output} = await aiChatbotPrompt(input);
     return output!;
   }
 );
