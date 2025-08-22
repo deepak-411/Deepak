@@ -19,7 +19,7 @@ type Message = {
 };
 
 export function Chatbot() {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([
     { role: 'assistant', content: "Hello! I'm an AI assistant. Ask me anything about Deepak Kumar and I'll answer in voice.", id: 0 },
