@@ -66,19 +66,19 @@ export function Hero() {
         <style jsx>{`
             @keyframes ping-slow {
                 75%, 100% {
-                    transform: scale(1.5);
+                    transform: scale(2);
                     opacity: 0;
                 }
             }
             .animate-ping-slow {
-                animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+                animation: ping-slow 4s cubic-bezier(0, 0, 0.2, 1) infinite;
             }
              @keyframes pulse-slow {
-                0%, 100% { opacity: 0.5; transform: scale(1); }
-                50% { opacity: 1; transform: scale(1.05); }
+                0%, 100% { opacity: 0.3; transform: scale(1); }
+                50% { opacity: 0.8; transform: scale(1.1); }
             }
             .animate-pulse-slow {
-                animation: pulse-slow 5s infinite ease-in-out;
+                animation: pulse-slow 6s infinite ease-in-out;
             }
             .animation-delay-[-2s] {
                 animation-delay: -2s;

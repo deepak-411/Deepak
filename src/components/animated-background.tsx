@@ -17,20 +17,42 @@ const Star = ({ size, top, left, duration }: { size: number; top: string; left: 
   />
 );
 
+const ShootingStar = () => {
+    const [style, setStyle] = useState({});
+  
+    useEffect(() => {
+      const generateStyle = () => {
+        const top = Math.random() * 100;
+        const left = Math.random() * 100;
+        const duration = Math.random() * 3 + 2;
+        const delay = Math.random() * 5;
+        setStyle({
+          top: `${top}%`,
+          left: `${left}%`,
+          animation: `shootingStar ${duration}s ease-in-out ${delay}s infinite`,
+        });
+      };
+      generateStyle();
+    }, []);
+  
+    return <div className="shooting-star" style={style}></div>;
+  };
+
 export function AnimatedBackground() {
   const [stars, setStars] = useState<{size: number; top: string; left: string; duration: string}[]>([]);
 
   useEffect(() => {
-    const starArray = [];
-    for (let i = 0; i < 100; i++) {
-      starArray.push({
-        size: Math.random() * 2 + 1,
-        top: `${Math.random() * 100}%`,
-        left: `${Math.random() * 100}%`,
-        duration: `${Math.random() * 3 + 2}s`,
-      });
-    }
-    setStars(starArray);
+    // This code now runs only on the client, preventing hydration errors.
+    const generateStars = () => {
+        const starArray = Array.from({ length: 100 }, () => ({
+            size: Math.random() * 2 + 1,
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            duration: `${Math.random() * 3 + 2}s`,
+        }));
+        setStars(starArray);
+    };
+    generateStars();
   }, []);
 
   return (
@@ -41,6 +63,9 @@ export function AnimatedBackground() {
       <div className="absolute inset-0 z-10">
         {stars.map((star, index) => (
           <Star key={index} {...star} />
+        ))}
+         {Array.from({ length: 5 }).map((_, i) => (
+          <ShootingStar key={i} />
         ))}
       </div>
 
@@ -62,6 +87,26 @@ export function AnimatedBackground() {
         }
         .animation-delay-[-4s] {
           animation-delay: -4s;
+        }
+
+        .shooting-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: linear-gradient(to right, hsl(var(--primary)), transparent);
+            border-radius: 50%;
+            transform: translateX(100vw);
+        }
+
+        @keyframes shootingStar {
+            0% {
+                transform: translateX(-100vw) translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100vw) translateY(100vh) scale(0);
+                opacity: 0;
+            }
         }
       `}</style>
     </div>
