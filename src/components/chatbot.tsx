@@ -115,7 +115,6 @@ export function Chatbot() {
         side="top"
         align="end"
         className="w-[calc(100vw-2rem)] sm:w-96 h-[70vh] p-0 flex flex-col mr-2"
-        onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <div className="flex items-center justify-between p-4 border-b">
           <h3 className="font-semibold">Deepak's AI Assistant</h3>
