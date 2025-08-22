@@ -5,25 +5,29 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { aiChatbot } from '@/ai/flows/ai-chatbot';
-import { Bot, Loader2, Send, User, X } from 'lucide-react';
+import { aiVoiceChatbot } from '@/ai/flows/ai-voice-chatbot';
+import { Bot, Loader2, Send, User, X, Volume2, VolumeX } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 type Message = {
   role: 'user' | 'assistant';
   content: string;
+  audio?: string;
+  id: number;
 };
 
 export function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: "Hello! I'm an AI assistant. Ask me anything about Deepak Kumar." },
+    { role: 'assistant', content: "Hello! I'm an AI assistant. Ask me anything about Deepak Kumar and I'll answer in voice.", id: 0 },
   ]);
   const [isLoading, setIsLoading] = useState(false);
+  const [playingAudioId, setPlayingAudioId] = useState<number | null>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -32,19 +36,56 @@ export function Chatbot() {
     }
   }, [messages]);
 
+  const playAudio = (audioSrc: string, messageId: number) => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    
+    const newAudio = new Audio(audioSrc);
+    audioRef.current = newAudio;
+
+    newAudio.onplay = () => setPlayingAudioId(messageId);
+    newAudio.onpause = () => setPlayingAudioId(null);
+    newAudio.onended = () => setPlayingAudioId(null);
+    
+    newAudio.play().catch(err => {
+      console.error("Audio play failed:", err);
+      toast({ title: "Playback Error", description: "Could not play audio.", variant: "destructive" });
+      setPlayingAudioId(null);
+    });
+  };
+
+  const handleSpeakerClick = (message: Message) => {
+    if (playingAudioId === message.id) {
+      audioRef.current?.pause();
+    } else if (message.audio) {
+      playAudio(message.audio, message.id);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
-    const userMessage: Message = { role: 'user', content: input };
+    const userMessage: Message = { role: 'user', content: input, id: Date.now() };
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
 
     try {
-      const result = await aiChatbot({ question: input });
-      const assistantMessage: Message = { role: 'assistant', content: result.answer };
+      const result = await aiVoiceChatbot({ question: input });
+      const assistantMessage: Message = { 
+        role: 'assistant', 
+        content: result.answer, 
+        audio: result.audio,
+        id: Date.now() + 1 
+      };
       setMessages((prev) => [...prev, assistantMessage]);
+      
+      if (result.audio) {
+        playAudio(result.audio, assistantMessage.id);
+      }
+
     } catch (error) {
       console.error("Chatbot error:", error);
       toast({
@@ -52,7 +93,8 @@ export function Chatbot() {
         description: "Sorry, I couldn't get a response. Please try again.",
         variant: "destructive",
       });
-      setMessages((prev) => prev.slice(0, -1)); // Remove user message on error
+      // Remove the user's message if the API call fails
+      setMessages((prev) => prev.filter(msg => msg.id !== userMessage.id));
     } finally {
       setIsLoading(false);
     }
@@ -83,9 +125,9 @@ export function Chatbot() {
         </div>
         <ScrollArea className="flex-1" ref={scrollAreaRef}>
           <div className="p-4 space-y-4">
-            {messages.map((message, index) => (
+            {messages.map((message) => (
               <div
-                key={index}
+                key={message.id}
                 className={cn('flex items-start gap-3', {
                   'justify-end': message.role === 'user',
                 })}
@@ -97,14 +139,23 @@ export function Chatbot() {
                 )}
                 <div
                   className={cn(
-                    'max-w-[80%] rounded-lg px-3 py-2 text-sm',
+                    'max-w-[80%] rounded-lg px-3 py-2 text-sm flex items-center gap-2',
                     {
                       'bg-primary text-primary-foreground': message.role === 'user',
                       'bg-secondary': message.role === 'assistant',
                     }
                   )}
                 >
-                  {message.content}
+                  <span>{message.content}</span>
+                  {message.audio && (
+                    <button onClick={() => handleSpeakerClick(message)} className="focus:outline-none focus:ring-2 focus:ring-ring rounded-full p-1">
+                      {playingAudioId === message.id ? (
+                        <VolumeX className="h-4 w-4 text-accent" />
+                      ) : (
+                        <Volume2 className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                      )}
+                    </button>
+                  )}
                 </div>
                  {message.role === 'user' && (
                   <Avatar className="h-8 w-8">
