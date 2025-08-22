@@ -2,17 +2,14 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 
-const siteUrl = 'https://deepakpersonalprofile.com';
-
 export const metadata: Metadata = {
   title: "Deepak Kumar Personal Profile",
   description: "The personal portfolio of Deepak Kumar, a passionate Software Engineer, Full-Stack Developer, and AI/ML Enthusiast specializing in creating innovative and impactful solutions.",
   keywords: ["Deepak Kumar", "Software Engineer", "Full-Stack Developer", "AI/ML Enthusiast", "React Developer", "Node.js", "Portfolio"],
-  authors: [{ name: "Deepak Kumar", url: siteUrl }],
+  authors: [{ name: "Deepak Kumar" }],
   creator: "Deepak Kumar",
   openGraph: {
     type: "website",
-    url: siteUrl,
     title: "Deepak Kumar Personal Profile",
     description: "The personal portfolio of Deepak Kumar, a passionate Software Engineer, Full-Stack Developer, and AI/ML Enthusiast.",
     siteName: "Deepak Kumar Portfolio",
@@ -25,10 +22,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    creator: "@your_twitter_handle", 
     title: "Deepak Kumar Personal Profile",
     description: "The personal portfolio of Deepak Kumar, Software Engineer and AI/ML Enthusiast.",
-    images: [`${siteUrl}/og-image.png`], 
+    images: ["/og-image.png"], 
   },
 };
 
