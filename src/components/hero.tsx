@@ -27,11 +27,11 @@ export function Hero() {
                         width={200}
                         height={200}
                         priority
-                        className="rounded-full object-cover border-4 border-primary shadow-lg shadow-[hsl(var(--primary)/0.5)]"
+                        className="rounded-full object-cover border-4 border-primary/50 shadow-lg shadow-[hsl(var(--primary)/0.5)]"
                         data-ai-hint="profile picture"
                     />
-                    <div className="absolute inset-0 rounded-full border-2 border-primary animate-ping"></div>
-                    <div className="absolute inset-0 rounded-full border-4 border-accent animate-pulse animation-delay-[-2s]"></div>
+                    <div className="absolute inset-0 rounded-full border-2 border-primary animate-ping-slow opacity-75"></div>
+                    <div className="absolute inset-0 rounded-full border-4 border-accent animate-pulse-slow opacity-50 animation-delay-[-2s]"></div>
                 </div>
                 <h1 className="text-5xl md:text-7xl font-bold kbc-title">
                   Deepak Kumar
@@ -63,6 +63,27 @@ export function Hero() {
                 Visit my official website
             </Link>
         </div>
+        <style jsx>{`
+            @keyframes ping-slow {
+                75%, 100% {
+                    transform: scale(1.5);
+                    opacity: 0;
+                }
+            }
+            .animate-ping-slow {
+                animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+            }
+             @keyframes pulse-slow {
+                0%, 100% { opacity: 0.5; transform: scale(1); }
+                50% { opacity: 1; transform: scale(1.05); }
+            }
+            .animate-pulse-slow {
+                animation: pulse-slow 5s infinite ease-in-out;
+            }
+            .animation-delay-[-2s] {
+                animation-delay: -2s;
+            }
+        `}</style>
       </div>
     </SectionWrapper>
   );
