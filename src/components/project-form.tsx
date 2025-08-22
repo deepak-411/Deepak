@@ -1,8 +1,8 @@
 
 "use client";
 
-import { useActionState, useEffect } from 'react';
-import { useFormStatus } from 'react-dom';
+import { useEffect } from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
 import { sendProjectEmail, type FormState } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,7 +29,7 @@ function SubmitButton() {
 }
 
 export function ProjectForm() {
-  const [state, formAction] = useActionState(sendProjectEmail, initialState);
+  const [state, formAction] = useFormState(sendProjectEmail, initialState);
   const { toast } = useToast();
 
   useEffect(() => {

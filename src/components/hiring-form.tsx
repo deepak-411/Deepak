@@ -1,7 +1,7 @@
 "use client";
 
-import { useActionState, useEffect } from 'react';
-import { useFormStatus } from 'react-dom';
+import { useEffect } from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
 import { sendHiringEmail, type FormState } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,7 +27,7 @@ function SubmitButton() {
 }
 
 export function HiringForm() {
-  const [state, formAction] = useActionState(sendHiringEmail, initialState);
+  const [state, formAction] = useFormState(sendHiringEmail, initialState);
   const { toast } = useToast();
 
   useEffect(() => {
