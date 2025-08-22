@@ -88,7 +88,7 @@ export function AiVoiceGreeting() {
   }, []);
 
   return (
-    <Button onClick={handlePlayPause} disabled={isLoading} variant="outline" className="text-primary-foreground/80 border-primary/50 hover:bg-primary/20 hover:text-primary-foreground">
+    <Button onClick={handlePlayPause} disabled={isLoading} variant="outline" className="text-foreground/80 border-primary/50 hover:bg-primary/20 hover:text-foreground">
       {isLoading ? (
         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
       ) : isPlaying ? (

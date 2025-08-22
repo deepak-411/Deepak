@@ -120,6 +120,6 @@
 }
 
 .glass-button {
-    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-lg shadow-lg;
+    @apply bg-white/5 text-foreground backdrop-blur-md border border-white/10 rounded-lg shadow-lg;
     @apply hover:bg-white/10 transition-all duration-300;
 }

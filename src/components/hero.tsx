@@ -41,13 +41,13 @@ export function Hero() {
                 </p>
 
                  <div className="mt-8 flex flex-wrap justify-center items-center gap-4">
-                    <Button asChild variant="ghost" className="text-primary-foreground/70 hover:text-primary-foreground hover:bg-white/10">
+                    <Button asChild variant="ghost" className="text-foreground/70 hover:text-foreground hover:bg-white/10">
                         <Link href="https://in.linkedin.com/in/deepak-kumar-587a011a5" target="_blank" rel="noopener noreferrer">
                             <Linkedin className="mr-2 h-5 w-5" />
                             LinkedIn
                         </Link>
                     </Button>
-                    <Button asChild variant="ghost" className="text-primary-foreground/70 hover:text-primary-foreground hover:bg-white/10">
+                    <Button asChild variant="ghost" className="text-foreground/70 hover:text-foreground hover:bg-white/10">
                         <Link href="https://github.com/deepak-411" target="_blank" rel="noopener noreferrer">
                             <Github className="mr-2 h-5 w-5" />
                             GitHub
@@ -59,7 +59,7 @@ export function Hero() {
 
         <div className="mt-12 flex flex-col items-center gap-6">
             <AiVoiceGreeting />
-             <Link href="https://deepakkumarinnovator.netlify.app/" target="_blank" rel="noopener noreferrer" className="glass-button px-8 py-3 text-lg text-primary-foreground border-primary/50 hover:border-primary">
+             <Link href="https://deepakkumarinnovator.netlify.app/" target="_blank" rel="noopener noreferrer" className="glass-button px-8 py-3 text-lg border-primary/50 hover:border-primary">
                 Visit my official website
             </Link>
         </div>
