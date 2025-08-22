@@ -129,14 +129,17 @@ Achievements
 
 const aiChatbotPrompt = ai.definePrompt({
   name: 'aiChatbotPrompt',
-  input: {schema: AIChatbotInputSchema},
+  input: {schema: z.object({
+    question: AIChatbotInputSchema.shape.question,
+    deepakKumarProfile: z.string(),
+  })},
   output: {schema: AIChatbotOutputSchema},
   prompt: `You are a chatbot answering questions about Deepak Kumar.
   Use the following information about Deepak Kumar to answer the user's question.
   If the question cannot be answered based on the information provided, respond with "I am sorry, I don't have enough information to answer that question."
 
   Deepak Kumar's Profile:
-  {{deepakKumarProfile}}
+  {{{deepakKumarProfile}}}
 
   User's Question: {{question}}`,
 });
