@@ -41,7 +41,6 @@ export function Hero() {
                 </p>
 
                  <div className="mt-8 flex flex-wrap justify-center items-center gap-4">
-                    <AiVoiceGreeting />
                     <Button asChild variant="ghost" className="text-primary-foreground/70 hover:text-primary-foreground hover:bg-white/10">
                         <Link href="https://in.linkedin.com/in/deepak-kumar-587a011a5" target="_blank" rel="noopener noreferrer">
                             <Linkedin className="mr-2 h-5 w-5" />

@@ -20,9 +20,8 @@ export function AiVoiceGreeting() {
       if (isPlaying) {
         audioRef.current.pause();
       } else {
-        audioRef.current.play();
+        await audioRef.current.play().catch(handlePlayError);
       }
-      setIsPlaying(!isPlaying);
       return;
     }
 
@@ -39,35 +38,48 @@ export function AiVoiceGreeting() {
       audio.addEventListener('pause', () => setIsPlaying(false));
       audio.addEventListener('ended', () => setIsPlaying(false));
       
-      await audio.play();
+      await audio.play().catch(handlePlayError);
 
     } catch (error: any) {
       console.error("Failed to generate or play AI greeting:", error);
-      
-      const errorMessage = error.message || 'An unknown error occurred.';
-      if (errorMessage.includes('429 Too Many Requests')) {
-         toast({
-          title: "Daily Limit Reached",
-          description: "The AI voice greeting has reached its daily usage limit. Please try again tomorrow.",
-          variant: "destructive",
-        });
-      } else {
-        toast({
-            title: "Error",
-            description: "Could not play the AI voice greeting. Please try again.",
-            variant: "destructive",
-        });
-      }
+      handleGenerationError(error);
     } finally {
       setIsLoading(false);
     }
   };
   
-  // Cleanup audio listeners on component unmount
+  const handleGenerationError = (error: any) => {
+    const errorMessage = error.message || 'An unknown error occurred.';
+    if (errorMessage.includes('429 Too Many Requests')) {
+       toast({
+        title: "Daily Limit Reached",
+        description: "The AI voice greeting has reached its daily usage limit. Please try again tomorrow.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+          title: "Error",
+          description: "Could not generate the AI voice greeting. Please try again.",
+          variant: "destructive",
+      });
+    }
+  };
+
+  const handlePlayError = (error: any) => {
+      // Autoplay was prevented.
+      console.warn("Audio autoplay was prevented by the browser.");
+      setIsPlaying(false);
+      toast({
+        title: "Autoplay Blocked",
+        description: "Your browser prevented audio from playing automatically. Click play to hear the greeting.",
+      });
+  };
+  
   useEffect(() => {
     const audio = audioRef.current;
     return () => {
       if (audio) {
+        audio.pause();
         audio.removeEventListener('play', () => setIsPlaying(true));
         audio.removeEventListener('pause', () => setIsPlaying(false));
         audio.removeEventListener('ended', () => setIsPlaying(false));
