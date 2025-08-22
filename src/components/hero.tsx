@@ -58,6 +58,7 @@ export function Hero() {
         </div>
 
         <div className="mt-12 flex flex-col items-center gap-6">
+            <AiVoiceGreeting />
              <Link href="https://deepakkumarinnovator.netlify.app/" target="_blank" rel="noopener noreferrer" className="glass-button px-8 py-3 text-lg text-primary-foreground border-primary/50 hover:border-primary">
                 Visit my official website
             </Link>
