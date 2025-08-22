@@ -5,7 +5,6 @@ import { Toaster } from '@/components/ui/toaster';
 const siteUrl = 'https://deepakpersonalprofile.com';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
   title: "Deepak Kumar Personal Profile",
   description: "The personal portfolio of Deepak Kumar, a passionate Software Engineer, Full-Stack Developer, and AI/ML Enthusiast specializing in creating innovative and impactful solutions.",
   keywords: ["Deepak Kumar", "Software Engineer", "Full-Stack Developer", "AI/ML Enthusiast", "React Developer", "Node.js", "Portfolio"],
@@ -18,7 +17,7 @@ export const metadata: Metadata = {
     description: "The personal portfolio of Deepak Kumar, a passionate Software Engineer, Full-Stack Developer, and AI/ML Enthusiast.",
     siteName: "Deepak Kumar Portfolio",
     images: [{
-      url: "/og-image.png", // Update with a real image path
+      url: "/og-image.png",
       width: 1200,
       height: 630,
       alt: "Deepak Kumar - Software Engineer",
@@ -26,10 +25,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    creator: "@your_twitter_handle", // Update with your Twitter handle
+    creator: "@your_twitter_handle", 
     title: "Deepak Kumar Personal Profile",
     description: "The personal portfolio of Deepak Kumar, Software Engineer and AI/ML Enthusiast.",
-    images: [`${siteUrl}/og-image.png`], // Update with a real image path
+    images: [`${siteUrl}/og-image.png`], 
   },
 };
 
