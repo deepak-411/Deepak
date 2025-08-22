@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useActionState, useEffect } from 'react';
@@ -63,8 +64,8 @@ export function ProjectForm() {
           </div>
            <div className="space-y-2">
               <Label htmlFor="projectType">Project Type</Label>
-               <select name="projectType" id="projectType" required className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm">
-                  <option value="" disabled selected>Select a project type...</option>
+               <select name="projectType" id="projectType" required defaultValue="" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm">
+                  <option value="" disabled>Select a project type...</option>
                   <option value="Website">Website</option>
                   <option value="Mobile App">Mobile App</option>
                   <option value="Web App">Web App</option>
@@ -74,8 +75,8 @@ export function ProjectForm() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="budget">Estimated Budget (USD)</Label>
-               <select name="budget" id="budget" required className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm">
-                  <option value="" disabled selected>Select a budget range...</option>
+               <select name="budget" id="budget" required defaultValue="" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm">
+                  <option value="" disabled>Select a budget range...</option>
                   <option value="< $1,000">&lt; $1,000</option>
                   <option value="$1,000 - $5,000">$1,000 - $5,000</option>
                   <option value="$5,000 - $10,000">$5,000 - $10,000</option>
