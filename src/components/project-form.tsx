@@ -75,7 +75,7 @@ export function ProjectForm() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="budget">Estimated Budget (USD)</Label>
-               <select name="budget" id="budget" required defaultValue="" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm">
+               <select name="budget" id="budget" required defaultValue="" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file-border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm">
                   <option value="" disabled>Select a budget range...</option>
                   <option value="< $1,000">&lt; $1,000</option>
                   <option value="$1,000 - $5,000">$1,000 - $5,000</option>
