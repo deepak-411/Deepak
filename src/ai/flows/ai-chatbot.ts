@@ -61,6 +61,6 @@ const aiChatbotFlow = ai.defineFlow(
   },
   async (input) => {
     const result = await aiChatbotPrompt(input);
-    return { answer: (await result.output())! };
+    return result.output!;
   }
 );

@@ -11,7 +11,6 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'zod';
 import wav from 'wav';
-import { geminiPro } from '@genkit-ai/googleai';
 
 const AiVoiceGreetingsInputSchema = z.object({
   name: z.string().describe('The name of the visitor.'),
@@ -34,13 +33,15 @@ const aiVoiceGreetingsFlow = ai.defineFlow(
     outputSchema: AiVoiceGreetingsOutputSchema,
   },
   async (input) => {
-    const { media } = await geminiPro.generate({
-      model: 'gemini-1.5-flash-tts-001',
-      output: {
-        format: 'audio',
-        speech: {
-            voice: 'Algenib',
-        }
+    const { media } = await ai.generate({
+      model: 'googleai/gemini-2.5-flash-preview-tts',
+      config: {
+        responseModalities: ['AUDIO'],
+        speechConfig: {
+          voiceConfig: {
+            prebuiltVoiceConfig: { voiceName: 'Algenib' },
+          },
+        },
       },
       prompt: `Hello ${input.name}, welcome to my personal profile. This is Deepak Kumar. Feel free to ask me anything.`,
     });
@@ -48,7 +49,7 @@ const aiVoiceGreetingsFlow = ai.defineFlow(
       throw new Error('no media returned');
     }
     const audioBuffer = Buffer.from(
-      media!.url.substring(media!.url.indexOf(',') + 1),
+      media.url.substring(media.url.indexOf(',') + 1),
       'base64'
     );
     return {
