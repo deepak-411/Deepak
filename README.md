@@ -6,7 +6,7 @@ This project highlights my **education, skills, projects, certifications, achiev
 ---
 
 ## 📌 Live Website
-🔗 [deepak-iota.vercel.app]([https://deepak-iota.vercel.app/](https://deepak-fawn.vercel.app/))
+🔗 [deepak-iota.vercel.app](https://deepak-fawn.vercel.app/)
 
 
 
