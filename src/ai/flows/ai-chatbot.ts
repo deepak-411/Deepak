@@ -9,7 +9,7 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import {z} from 'zod';
 import { achievements, certifications, education, experiences, projects, skills } from '@/lib/data';
 
 
@@ -38,8 +38,8 @@ export async function aiChatbot(input: AIChatbotInput): Promise<AIChatbotOutput>
 
 const aiChatbotPrompt = ai.definePrompt({
   name: 'aiChatbotPrompt',
-  input: {schema: AIChatbotInputSchema},
-  output: {schema: AIChatbotOutputSchema},
+  inputSchema: AIChatbotInputSchema,
+  outputSchema: AIChatbotOutputSchema,
   system: `You are a helpful and friendly AI assistant for Deepak Kumar's personal portfolio. 
 Your goal is to answer questions from visitors about Deepak based on the profile information provided below.
 Be conversational and answer in a clear and concise manner.
@@ -60,7 +60,7 @@ const aiChatbotFlow = ai.defineFlow(
     outputSchema: AIChatbotOutputSchema,
   },
   async (input) => {
-    const {output} = await aiChatbotPrompt(input);
-    return output!;
+    const result = await aiChatbotPrompt(input);
+    return { answer: (await result.output())! };
   }
 );

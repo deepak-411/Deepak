@@ -8,9 +8,10 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'genkit';
+import { z } from 'zod';
 import { aiChatbot } from './ai-chatbot';
 import wav from 'wav';
+import { geminiPro } from '@genkit-ai/googleai';
 
 const AIVoiceChatbotInputSchema = z.object({
   question: z.string().describe('The user question about Deepak Kumar.'),
@@ -68,22 +69,20 @@ const aiVoiceChatbotFlow = ai.defineFlow(
 
     try {
         // Then, generate audio from that text answer.
-        const { media } = await ai.generate({
-          model: 'googleai/gemini-2.5-flash-preview-tts',
-          config: {
-            responseModalities: ['AUDIO'],
-            speechConfig: {
-              voiceConfig: {
-                prebuiltVoiceConfig: { voiceName: 'Algenib' },
-              },
-            },
+        const { media } = await geminiPro.generate({
+          model: 'gemini-1.5-flash-tts-001',
+          output: {
+            format: 'audio',
+            speech: {
+                voice: 'Algenib',
+            }
           },
           prompt: answer,
         });
 
         if (media) {
             const audioBuffer = Buffer.from(
-              media.url.substring(media.url.indexOf(',') + 1),
+              media!.url.substring(media!.url.indexOf(',') + 1),
               'base64'
             );
             const wavAudioBase64 = await toWav(audioBuffer);
