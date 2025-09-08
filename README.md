@@ -1,5 +1,12 @@
-# Firebase Studio
+# Deepak Kumar – Portfolio 🚀
 
-This is a NextJS starter in Firebase Studio.
+Welcome to the repository of my **personal portfolio website** 🌐, built to showcase my journey as a **Software Engineer, AI/ML Enthusiast, Innovator, and Problem Solver**.  
+This project highlights my **education, skills, projects, certifications, achievements, and professional experience** in a clean, responsive, and modern single-page portfolio.
 
-To get started, take a look at src/app/page.tsx.
+---
+
+## 📌 Live Website
+🔗 [deepak-iota.vercel.app](https://deepak-iota.vercel.app/)
+
+
+
